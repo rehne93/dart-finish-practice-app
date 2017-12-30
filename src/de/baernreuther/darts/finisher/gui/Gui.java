@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -70,7 +71,7 @@ public class Gui extends Application {
                 try{
                     int scoreInput = getScoreInput();
                     int scoreLeftBeforeCalc = getScoreLeft();
-                    isGameFinished();
+                    if(isGameFinished()) return;
                     int scoreLeft = new DoubleFinishCalculator().scoreLeft(scoreInput,scoreLeftBeforeCalc);
                     hitOnDoublePossible(scoreLeft);
                     gameHasCurrentlyFinished(scoreLeft == 0);
@@ -121,17 +122,19 @@ public class Gui extends Application {
         sc = new Scene(gridPane, 300,250);
         primaryStage.setScene(sc);
         primaryStage.setTitle("Dart Finish Practice");
+        primaryStage.getIcons().add(new Image("file:res/icon.png"));
         primaryStage.show();
     }
 
     /** Sets the GUI Logic if the game is finished <-> the score equals zero */
-    private void isGameFinished(){
+    private boolean isGameFinished(){
         if(isGameFinished){
             scoreButton.setText("Scored");
             scoreLeft.setText(String.valueOf(new DoubleFinishNumberGenerator().generateNumberToFinish()));
             isGameFinished = false;
-            return;
+            return true;
         }
+        return false;
     }
 
     private void gameHasCurrentlyFinished(boolean scoreIsZero){

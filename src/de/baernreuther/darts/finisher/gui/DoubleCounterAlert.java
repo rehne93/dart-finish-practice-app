@@ -2,8 +2,10 @@ package de.baernreuther.darts.finisher.gui;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
@@ -17,6 +19,8 @@ public class DoubleCounterAlert {
         alert.setHeaderText(null);
         alert.setContentText("Doubles missed?");
 
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("file:res/icon.png"));
         ButtonType buttonTypeOne = new ButtonType("One");
         ButtonType buttonTypeTwo = new ButtonType("Two");
         ButtonType buttonTypeThree = new ButtonType("Three");
