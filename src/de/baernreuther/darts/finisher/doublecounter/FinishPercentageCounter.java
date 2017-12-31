@@ -6,4 +6,6 @@ public interface FinishPercentageCounter {
 
     int getDoublesHit(boolean isFinished);
 
+    double getAverage();
+
 }

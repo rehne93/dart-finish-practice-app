@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
+
 public class DoubleCounterAlert {
-// TODO Make One, Two, Three clickable with KeyCode 1,2,3.
 
     public int getDoubleAlert() {
         Alert alert = new Alert(Alert.AlertType.NONE);
@@ -32,10 +32,24 @@ public class DoubleCounterAlert {
                     && event.getTarget() instanceof Button) {
                 ((Button) event.getTarget()).fire();
             }
+            // Allow to enter 1,2,3 on Numbers or Numpad as well
+            if ((KeyCode.DIGIT1.equals(event.getCode()) || KeyCode.NUMPAD1.equals(event.getCode())) && event.getTarget() instanceof Button) {
+                ((Button) alert.getDialogPane().lookupButton(buttonTypeOne)).fire();
+            }
+            if ((KeyCode.DIGIT2.equals(event.getCode()) || KeyCode.NUMPAD2.equals(event.getCode())) && event.getTarget() instanceof Button) {
+                ((Button) alert.getDialogPane().lookupButton(buttonTypeTwo)).fire();
+            }
+            if ((KeyCode.DIGIT3.equals(event.getCode()) || KeyCode.NUMPAD3.equals(event.getCode())) && event.getTarget() instanceof Button) {
+                ((Button) alert.getDialogPane().lookupButton(buttonTypeThree)).fire();
+            }
+            if ((KeyCode.DIGIT0.equals(event.getCode()) || KeyCode.NUMPAD0.equals(event.getCode())) && event.getTarget() instanceof Button) {
+                ((Button) alert.getDialogPane().lookupButton(buttonTypeCancel)).fire();
+            }
         };
 
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED,fireOnEnter));
+
 
         Optional<ButtonType> result = alert.showAndWait();
         if(result.get() == buttonTypeOne){

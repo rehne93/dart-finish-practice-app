@@ -14,9 +14,15 @@ public class DoubleCounter implements FinishPercentageCounter{
     public int getDoublesHit(boolean isFinished){
         if(isFinished){
             doublesHit+=1;
-
         }
         return doublesHit;
+    }
+
+    public double getAverage() {
+        double dHit = Double.valueOf(doublesHit);
+        double dShot = Double.valueOf(doubleShot);
+
+        return dHit / dShot;
     }
 
 }
