@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="dart-finish-practice:jar">
+    <output-path>$PROJECT_DIR$/builds</output-path>
+    <root id="archive" name="dart-finish-practice.jar">
+      <element id="module-output" name="dart-finish-practice" />
+    </root>
+  </artifact>
+</component>

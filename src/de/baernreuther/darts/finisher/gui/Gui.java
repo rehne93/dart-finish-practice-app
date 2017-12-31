@@ -46,7 +46,7 @@ public abstract class Gui extends Application {
 
         primaryStage.setTitle("Dart Finish Practice");
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image("file:res/icon.png"));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
         primaryStage.show();
     }
 
