@@ -1,7 +1,6 @@
 package de.baernreuther.darts.finisher.gui;
 
 import de.baernreuther.darts.finisher.doublecounter.DoubleCounter;
-import de.baernreuther.darts.finisher.doublecounter.FinishPercentageCounter;
 import de.baernreuther.darts.finisher.finishcalculator.DoubleFinishCalculator;
 import de.baernreuther.darts.finisher.numbergenerator.DoubleFinishNumberGenerator;
 import javafx.beans.value.ChangeListener;
@@ -9,12 +8,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -25,29 +22,36 @@ import javafx.stage.Stage;
 public class FinishingGui extends Gui {
 
     private static final int HIGHEST_DOUBLE = 50;
+
     private final Label doubleHitLabel = new Label("Hit:");
     private final Label doubleShotLabel = new Label("Shot:");
     private final Label scoreLeftLabel = new Label("Left:");
-    private Scene sc;
-    private GridPane gridPane;
+    private final Label doubleAverageLabel = new Label("Average:");
+
     /*** Scores the shot from scoreInputField*/
     private Button scoreButton;
     /*** Numeric input for user*/
     private TextField scoreInputField;
-    /**
-     * Shows a number which the user has to score to zero
-     */
+    /*** Shows a number which the user has to score to zero*/
     private Label scoreLeft;
-    /**
-     * Shows how many hits the user has on doubles
-     */
+    /*** Shows how many hits the user has on doubles*/
     private Label doublesHit;
-    /**
-     * Shows how many shots the user has on doubles in generell
-     */
+    /*** Shows how many shots the user has on doubles in generell*/
     private Label doubleShots;
+    /*** Shows the average on doubles */
+    private Label doubleAverage;
+
+
+
     private boolean isGameFinished = false;
 
+
+    @Override
+    protected void initializeCounter() {
+        finishPercentageCounter = new DoubleCounter();
+        finishCalculation = new DoubleFinishCalculator();
+        numberGenerator = new DoubleFinishNumberGenerator();
+    }
     @Override
     public void start(Stage primaryStage) {
         scoreLeft = new Label(String.valueOf(new DoubleFinishNumberGenerator().generateNumberToFinish()));
@@ -55,6 +59,7 @@ public class FinishingGui extends Gui {
         scoreLeft.setScaleY(2);
         doublesHit = new Label("");
         doubleShots = new Label("");
+        doubleAverage = new Label("");
 
         scoreInputField = new TextField();
 
@@ -67,13 +72,16 @@ public class FinishingGui extends Gui {
                 try {
                     int scoreInput = getScoreInput();
                     int scoreLeftBeforeCalc = getScoreLeft();
+
                     if (isGameFinished()) return;
-                    int scoreLeft = new DoubleFinishCalculator().scoreLeft(scoreInput, scoreLeftBeforeCalc);
+
+                    int scoreLeft = finishCalculation.scoreLeft(scoreInput, scoreLeftBeforeCalc);
+
                     hitOnDoublePossible(scoreLeft);
-                    gameHasCurrentlyFinished(scoreLeft == 0);
+                    FinishingGui.this.scoreLeft.setText(String.valueOf(scoreLeft));
+                    setNewScoreIfFinished(scoreLeft == 0);
 
                     /* Reset to allow new enter */
-                    FinishingGui.this.scoreLeft.setText(String.valueOf(scoreLeft));
                     scoreInputField.setText("");
 
                 } catch (Exception ex) {
@@ -98,61 +106,72 @@ public class FinishingGui extends Gui {
             }
         });
 
-        gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(20);
-        gridPane.setAlignment(Pos.CENTER);
-
-        gridPane.add(scoreLeftLabel, 0, 0);
-        gridPane.add(scoreLeft, 1, 0);
-
-        gridPane.add(scoreInputField, 0, 1);
-
-        gridPane.add(scoreButton, 0, 2);
-
-        gridPane.add(doubleHitLabel, 0, 4);
-        gridPane.add(doublesHit, 1, 4);
-        gridPane.add(doubleShotLabel, 2, 4);
-        gridPane.add(doubleShots, 3, 4);
-
-        sc = new Scene(gridPane, 300, 250);
-        primaryStage.setScene(sc);
-        primaryStage.setTitle("Dart Finish Practice");
-        primaryStage.getIcons().add(new Image("file:res/icon.png"));
-        primaryStage.show();
+        super.start(primaryStage);
     }
 
+
+    @Override
+    protected void initializeScene() {
+        super.initializeScene();
+    }
+
+    @Override
+    protected void initializeGridLayout() {
+        gridLayout = new GridPane();
+        gridLayout.setHgap(10);
+        gridLayout.setVgap(20);
+        gridLayout.setAlignment(Pos.CENTER);
+
+        gridLayout.add(scoreLeftLabel, 0, 0);
+        gridLayout.add(scoreLeft, 1, 0);
+
+        gridLayout.add(scoreInputField, 0, 1);
+
+        gridLayout.add(scoreButton, 0, 2);
+
+        gridLayout.add(doubleHitLabel, 0, 4);
+        gridLayout.add(doublesHit, 1, 4);
+        gridLayout.add(doubleShotLabel, 2, 4);
+        gridLayout.add(doubleShots, 3, 4);
+
+        gridLayout.add(doubleAverageLabel, 0, 5);
+        gridLayout.add(doubleAverage, 1, 5);
+
+    }
     /**
      * Sets the GUI Logic if the game is finished <-> the score equals zero
      */
     private boolean isGameFinished() {
         if (isGameFinished) {
             scoreButton.setText("Scored");
-            scoreLeft.setText(String.valueOf(new DoubleFinishNumberGenerator().generateNumberToFinish()));
+            scoreLeft.setText(String.valueOf(numberGenerator.generateNumberToFinish()));
             isGameFinished = false;
             return true;
         }
         return false;
     }
 
-    private void gameHasCurrentlyFinished(boolean scoreIsZero) {
+    private void setNewScoreIfFinished(boolean scoreIsZero) {
         if (scoreIsZero) {
-            scoreButton.setText("New Game!");
-            isGameFinished = true;
+            scoreLeft.setText(String.valueOf(numberGenerator.generateNumberToFinish()));
         }
     }
 
     private void hitOnDoublePossible(int scoreLeft) {
         if (scoreLeft <= HIGHEST_DOUBLE) {
             int doublesShot = new DoubleCounterAlert().getDoubleAlert();
-            FinishPercentageCounter finishPercentageCounter = new DoubleCounter();
+
             int hit = finishPercentageCounter.getDoublesHit(scoreLeft == 0);
+
             if (scoreLeft == 0) {
                 doublesShot++;
             }
             int missed = finishPercentageCounter.getDoubleShot(doublesShot);
+
             doubleShots.setText(String.valueOf(missed));
             doublesHit.setText(String.valueOf(hit));
+            doubleAverage.setText(String.format("%.3g%n", finishPercentageCounter.getAverage()));
+
         }
     }
 
@@ -166,4 +185,6 @@ public class FinishingGui extends Gui {
         }
         return Integer.valueOf(scoreInputField.getText());
     }
+
+
 }

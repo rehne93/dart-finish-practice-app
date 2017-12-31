@@ -1,6 +1,5 @@
 package de.baernreuther.darts.finisher.finishcalculator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +7,6 @@ import java.util.Set;
 public class DoubleFinishCalculator implements FinishCalculation {
 
     private Set<Integer> notThrowable = new HashSet<>(Arrays.asList(169,168,166,165,163,162,159));
-    // TODO Find out the numbers
 
    public int scoreLeft(int scoreShot, int scoreLeft){
         int tempScore;

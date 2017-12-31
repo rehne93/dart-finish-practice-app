@@ -22,6 +22,9 @@ public class DoubleCounter implements FinishPercentageCounter{
         double dHit = Double.valueOf(doublesHit);
         double dShot = Double.valueOf(doubleShot);
 
+        if (dShot == 0 || dHit == 0) {
+            return 0;
+        }
         return dHit / dShot;
     }
 
