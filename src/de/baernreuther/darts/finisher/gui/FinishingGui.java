@@ -2,17 +2,16 @@ package de.baernreuther.darts.finisher.gui;
 
 import de.baernreuther.darts.finisher.doublecounter.DoubleCounter;
 import de.baernreuther.darts.finisher.finishcalculator.DoubleFinishCalculator;
+import de.baernreuther.darts.finisher.numbergenerator.BalancedDoubleFinishNumberGenerator;
 import de.baernreuther.darts.finisher.numbergenerator.DoubleFinishNumberGenerator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -42,7 +41,6 @@ public class FinishingGui extends Gui {
     private Label doubleAverage;
 
 
-
     private boolean isGameFinished = false;
 
 
@@ -50,16 +48,17 @@ public class FinishingGui extends Gui {
     protected void initializeCounter() {
         finishPercentageCounter = new DoubleCounter();
         finishCalculation = new DoubleFinishCalculator();
-        numberGenerator = new DoubleFinishNumberGenerator();
+        numberGenerator = new BalancedDoubleFinishNumberGenerator();
     }
+
     @Override
     public void start(Stage primaryStage) {
         scoreLeft = new Label(String.valueOf(new DoubleFinishNumberGenerator().generateNumberToFinish()));
         scoreLeft.setScaleX(2);
         scoreLeft.setScaleY(2);
-        doublesHit = new Label("");
-        doubleShots = new Label("");
-        doubleAverage = new Label("");
+        doublesHit = new Label("0");
+        doubleShots = new Label("0");
+        doubleAverage = new Label("0.0");
 
         scoreInputField = new TextField();
 
@@ -120,14 +119,14 @@ public class FinishingGui extends Gui {
         gridLayout = new GridPane();
         gridLayout.setHgap(10);
         gridLayout.setVgap(20);
-        gridLayout.setAlignment(Pos.CENTER);
+        //gridLayout.setAlignment(Pos.CENTER);
 
-        gridLayout.add(scoreLeftLabel, 0, 0);
-        gridLayout.add(scoreLeft, 1, 0);
+        gridLayout.add(scoreLeftLabel, 0, 1);
+        gridLayout.add(scoreLeft, 1, 1);
 
-        gridLayout.add(scoreInputField, 0, 1);
+        gridLayout.add(scoreInputField, 0, 2);
 
-        gridLayout.add(scoreButton, 0, 2);
+        gridLayout.add(scoreButton, 0, 3);
 
         gridLayout.add(doubleHitLabel, 0, 4);
         gridLayout.add(doublesHit, 1, 4);
@@ -136,8 +135,52 @@ public class FinishingGui extends Gui {
 
         gridLayout.add(doubleAverageLabel, 0, 5);
         gridLayout.add(doubleAverage, 1, 5);
+        super.enableMenuBar(0);
+
 
     }
+
+    @Override
+    protected void initializeMenuBar() {
+        menuBar = new MenuBar();
+
+        Menu menu = new Menu("Modes");
+        MenuItem normalDouble = new CheckMenuItem("(X) Double");
+        MenuItem balancedDouble = new CheckMenuItem("Higher Double");
+
+        menu.getItems().add(normalDouble);
+        menu.getItems().add(balancedDouble);
+        menuBar.getMenus().addAll(menu);
+
+
+        normalDouble.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                numberGenerator = new DoubleFinishNumberGenerator();
+                normalDouble.setText("(X) Double");
+                balancedDouble.setText("Higher Double");
+                resetState();
+            }
+        });
+
+        balancedDouble.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                numberGenerator = new BalancedDoubleFinishNumberGenerator();
+                normalDouble.setText("Double");
+                balancedDouble.setText("(X) Higher Double");
+                resetState();
+            }
+        });
+
+    }
+
+
+    /**
+     * Resets the state to a new number.
+     */
+    private void resetState() {
+        scoreLeft.setText(String.valueOf(numberGenerator.generateNumberToFinish()));
+    }
+
     /**
      * Sets the GUI Logic if the game is finished <-> the score equals zero
      */
@@ -170,7 +213,7 @@ public class FinishingGui extends Gui {
 
             doubleShots.setText(String.valueOf(missed));
             doublesHit.setText(String.valueOf(hit));
-            doubleAverage.setText(String.format("%.3g%n", finishPercentageCounter.getAverage()));
+            doubleAverage.setText(String.format("%.2g", finishPercentageCounter.getAverage()) + "%");
 
         }
     }

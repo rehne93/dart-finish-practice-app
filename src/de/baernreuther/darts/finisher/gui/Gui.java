@@ -5,9 +5,14 @@ import de.baernreuther.darts.finisher.finishcalculator.FinishCalculation;
 import de.baernreuther.darts.finisher.numbergenerator.NumberGenerator;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.awt.*;
+
 
 public abstract class Gui extends Application {
 
@@ -27,6 +32,10 @@ public abstract class Gui extends Application {
      * Gridlayout
      */
     protected GridPane gridLayout;
+    /**
+     * MenuBar on top
+     */
+    protected MenuBar menuBar;
     // TODO Refactor this to be more readable
     protected FinishCalculation finishCalculation;
 
@@ -40,6 +49,7 @@ public abstract class Gui extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        initializeMenuBar();
         initializeGridLayout();
         initializeScene();
         initializeCounter();
@@ -66,6 +76,23 @@ public abstract class Gui extends Application {
         scene = new Scene(gridLayout, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
+    /**
+     * Initializes a simple MenuBar.
+     * Should be overriden if necessary.
+     */
+    protected void initializeMenuBar(){
+        menuBar = new MenuBar();
+    }
+
+
+    /**
+     * Adds the menuBar if not zero
+     */
+    protected final void enableMenuBar(int rowIndex){
+        if(menuBar != null){
+            gridLayout.add(menuBar,0,rowIndex);
+        }
+    }
     // TODO: Make this more readable for the user.
     protected abstract void initializeCounter();
 

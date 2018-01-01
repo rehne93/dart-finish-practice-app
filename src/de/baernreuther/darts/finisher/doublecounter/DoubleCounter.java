@@ -25,7 +25,7 @@ public class DoubleCounter implements FinishPercentageCounter{
         if (dShot == 0 || dHit == 0) {
             return 0;
         }
-        return dHit / dShot;
+        return (dHit / dShot * 100);
     }
 
 }
