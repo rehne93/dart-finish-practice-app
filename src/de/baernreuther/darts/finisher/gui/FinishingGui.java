@@ -8,10 +8,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -58,7 +56,7 @@ public class FinishingGui extends Gui {
         scoreLeft.setScaleY(2);
         doublesHit = new Label("0");
         doubleShots = new Label("0");
-        doubleAverage = new Label("0.0");
+        doubleAverage = new Label("0,0%");
 
         scoreInputField = new TextField();
 
@@ -201,7 +199,7 @@ public class FinishingGui extends Gui {
     }
 
     private void hitOnDoublePossible(int scoreLeft) {
-        if (scoreLeft <= HIGHEST_DOUBLE) {
+        if (scoreLeft <= HIGHEST_DOUBLE || getScoreInput() == 0) {
             int doublesShot = new DoubleCounterAlert().getDoubleAlert();
 
             int hit = finishPercentageCounter.getDoublesHit(scoreLeft == 0);
@@ -213,7 +211,7 @@ public class FinishingGui extends Gui {
 
             doubleShots.setText(String.valueOf(missed));
             doublesHit.setText(String.valueOf(hit));
-            doubleAverage.setText(String.format("%.2g", finishPercentageCounter.getAverage()) + "%");
+            doubleAverage.setText(String.format("%.4g", finishPercentageCounter.getAverage()) + "%");
 
         }
     }

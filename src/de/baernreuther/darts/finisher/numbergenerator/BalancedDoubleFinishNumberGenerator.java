@@ -10,10 +10,10 @@ public class BalancedDoubleFinishNumberGenerator implements NumberGenerator{
 
     @Override
     public int generateNumberToFinish() {
-        int ranDecider = ThreadLocalRandom.current().nextInt(2, 170 + 1);
+        int ranDecider = ThreadLocalRandom.current().nextInt(0, 100 + 1);
 
 
-        if(ranDecider < 81){
+        if (ranDecider <= 81) {
             return ThreadLocalRandom.current().nextInt(50, 170 + 1);
         }else{
             return ThreadLocalRandom.current().nextInt(2, 60);
