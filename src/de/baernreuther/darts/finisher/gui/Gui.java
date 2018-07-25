@@ -8,10 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.awt.*;
 
 
 public abstract class Gui extends Application {
@@ -19,11 +16,11 @@ public abstract class Gui extends Application {
     /**
      * Default width for Window
      */
-    protected final static int DEFAULT_WIDTH = 300;
+    protected final static int DEFAULT_WIDTH = 250;
     /**
      * Default height for Window
      */
-    protected final static int DEFAULT_HEIGHT = 250;
+    protected final static int DEFAULT_HEIGHT = 225;
     /**
      * Scene of the screen
      */
@@ -56,6 +53,7 @@ public abstract class Gui extends Application {
 
         primaryStage.setTitle("Dart Finish Practice");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
         primaryStage.show();
     }

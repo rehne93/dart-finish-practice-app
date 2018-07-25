@@ -2,8 +2,9 @@ package de.baernreuther.darts.finisher.gui;
 
 import de.baernreuther.darts.finisher.doublecounter.DoubleCounter;
 import de.baernreuther.darts.finisher.finishcalculator.DoubleFinishCalculator;
-import de.baernreuther.darts.finisher.numbergenerator.BalancedDoubleFinishNumberGenerator;
-import de.baernreuther.darts.finisher.numbergenerator.DoubleFinishNumberGenerator;
+import de.baernreuther.darts.finisher.numbergenerator.HigherDoubleFinishNumberGenerator;
+import de.baernreuther.darts.finisher.numbergenerator.SmallerDoubleFinishGenerator;
+import de.baernreuther.darts.finisher.numbergenerator.X01NumberGenerator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -46,12 +47,12 @@ public class FinishingGui extends Gui {
     protected void initializeCounter() {
         finishPercentageCounter = new DoubleCounter();
         finishCalculation = new DoubleFinishCalculator();
-        numberGenerator = new BalancedDoubleFinishNumberGenerator();
+        numberGenerator = new HigherDoubleFinishNumberGenerator();
     }
 
     @Override
     public void start(Stage primaryStage) {
-        scoreLeft = new Label(String.valueOf(new DoubleFinishNumberGenerator().generateNumberToFinish()));
+        scoreLeft = new Label(String.valueOf(new SmallerDoubleFinishGenerator().generateNumberToFinish()));
         scoreLeft.setScaleX(2);
         scoreLeft.setScaleY(2);
         doublesHit = new Label("0");
@@ -104,20 +105,21 @@ public class FinishingGui extends Gui {
         });
 
         super.start(primaryStage);
+
     }
 
 
     @Override
     protected void initializeScene() {
         super.initializeScene();
+
     }
 
     @Override
     protected void initializeGridLayout() {
         gridLayout = new GridPane();
-        gridLayout.setHgap(10);
         gridLayout.setVgap(20);
-        //gridLayout.setAlignment(Pos.CENTER);
+        gridLayout.setHgap(10);
 
         gridLayout.add(scoreLeftLabel, 0, 1);
         gridLayout.add(scoreLeft, 1, 1);
@@ -128,11 +130,13 @@ public class FinishingGui extends Gui {
 
         gridLayout.add(doubleHitLabel, 0, 4);
         gridLayout.add(doublesHit, 1, 4);
+
         gridLayout.add(doubleShotLabel, 2, 4);
         gridLayout.add(doubleShots, 3, 4);
 
         gridLayout.add(doubleAverageLabel, 0, 5);
         gridLayout.add(doubleAverage, 1, 5);
+
         super.enableMenuBar(0);
 
 
@@ -142,29 +146,46 @@ public class FinishingGui extends Gui {
     protected void initializeMenuBar() {
         menuBar = new MenuBar();
 
-        Menu menu = new Menu("Modes");
-        MenuItem normalDouble = new CheckMenuItem("(X) Double");
-        MenuItem balancedDouble = new CheckMenuItem("Higher Double");
+        Menu modes = new Menu("Modes");
+        CheckMenuItem smallerDoubles = new CheckMenuItem("Smaller Doubles");
+        CheckMenuItem higherDoubles = new CheckMenuItem("Higher Doubles");
+        CheckMenuItem threeHundertd1 = new CheckMenuItem("301");
 
-        menu.getItems().add(normalDouble);
-        menu.getItems().add(balancedDouble);
-        menuBar.getMenus().addAll(menu);
+        smallerDoubles.setSelected(true);
+
+        modes.getItems().add(smallerDoubles);
+        modes.getItems().add(higherDoubles);
+        modes.getItems().add(threeHundertd1);
+
+        menuBar.getMenus().add(modes);
 
 
-        normalDouble.setOnAction(new EventHandler<ActionEvent>() {
+        threeHundertd1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                numberGenerator = new X01NumberGenerator(301);
+                higherDoubles.setSelected(false);
+                smallerDoubles.setSelected(false);
+                threeHundertd1.setSelected(true);
+                resetState();
+            }
+        });
+        smallerDoubles.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                numberGenerator = new DoubleFinishNumberGenerator();
-                normalDouble.setText("(X) Double");
-                balancedDouble.setText("Higher Double");
+                numberGenerator = new SmallerDoubleFinishGenerator();
+                higherDoubles.setSelected(false);
+                smallerDoubles.setSelected(true);
+                threeHundertd1.setSelected(false);
                 resetState();
             }
         });
 
-        balancedDouble.setOnAction(new EventHandler<ActionEvent>() {
+        higherDoubles.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                numberGenerator = new BalancedDoubleFinishNumberGenerator();
-                normalDouble.setText("Double");
-                balancedDouble.setText("(X) Higher Double");
+                numberGenerator = new HigherDoubleFinishNumberGenerator();
+                higherDoubles.setSelected(true);
+                smallerDoubles.setSelected(false);
+                threeHundertd1.setSelected(false);
                 resetState();
             }
         });

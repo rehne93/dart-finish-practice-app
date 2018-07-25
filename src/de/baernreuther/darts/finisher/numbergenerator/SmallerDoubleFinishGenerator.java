@@ -6,9 +6,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author  René Bärnreuther
  * Returns a fully random number between 2 and 170.
  */
-public class DoubleFinishNumberGenerator implements NumberGenerator {
+public class SmallerDoubleFinishGenerator implements NumberGenerator {
 
     public int generateNumberToFinish(){
-        return ThreadLocalRandom.current().nextInt(2, 170 + 1);
+        return ThreadLocalRandom.current().nextInt(2, 90 + 1);
     }
 }
