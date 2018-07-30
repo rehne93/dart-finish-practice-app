@@ -16,11 +16,11 @@ public abstract class Gui extends Application {
     /**
      * Default width for Window
      */
-    protected final static int DEFAULT_WIDTH = 250;
+    protected final static int DEFAULT_WIDTH = 300;
     /**
      * Default height for Window
      */
-    protected final static int DEFAULT_HEIGHT = 225;
+    protected final static int DEFAULT_HEIGHT = 250;
     /**
      * Scene of the screen
      */

@@ -25,7 +25,7 @@ public class FinishingGui extends Gui {
     private final Label doubleShotLabel = new Label("Shot:");
     private final Label scoreLeftLabel = new Label("Left:");
     private final Label doubleAverageLabel = new Label("Average:");
-    private final Label shoutsTotalLabel = new Label("Runde:");
+    private final Label roundsTotalLabel = new Label("Runde:");
 
     /*** Scores the shot from scoreInputField*/
     private Button scoreButton;
@@ -42,7 +42,7 @@ public class FinishingGui extends Gui {
     /**
      * Shows the shots total in this game
      */
-    private Label shotsTotal;
+    private Label roundsTotal;
 
 
     private boolean isGameFinished = false;
@@ -63,7 +63,7 @@ public class FinishingGui extends Gui {
         doublesHit = new Label("0");
         doubleShots = new Label("0");
         doubleAverage = new Label("0,0%");
-        shotsTotal = new Label(String.valueOf("1"));
+        roundsTotal = new Label(String.valueOf("1"));
         scoreInputField = new TextField();
 
         scoreButton = new Button();
@@ -142,8 +142,8 @@ public class FinishingGui extends Gui {
         gridLayout.add(doubleAverageLabel, 0, 5);
         gridLayout.add(doubleAverage, 1, 5);
 
-        gridLayout.add(shoutsTotalLabel, 2, 5);
-        gridLayout.add(shotsTotal, 3, 5);
+        gridLayout.add(roundsTotalLabel, 2, 5);
+        gridLayout.add(roundsTotal, 3, 5);
 
         super.enableMenuBar(0);
 
@@ -244,7 +244,7 @@ public class FinishingGui extends Gui {
             doubleAverage.setText(String.format("%.4g", finishPercentageCounter.getAverage()) + "%");
 
         }
-        shotsTotal.setText(String.valueOf(finishPercentageCounter.getCurrentRound()));
+        roundsTotal.setText(String.valueOf(finishPercentageCounter.getCurrentRound()));
 
     }
 
