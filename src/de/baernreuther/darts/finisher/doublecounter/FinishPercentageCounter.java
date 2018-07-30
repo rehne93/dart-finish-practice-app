@@ -8,4 +8,8 @@ public interface FinishPercentageCounter {
 
     double getAverage();
 
+    int getCurrentRound();
+
+    void resetRound();
+
 }
